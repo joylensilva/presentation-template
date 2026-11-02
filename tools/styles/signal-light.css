@@ -1,0 +1,100 @@
+/* SIGNAL LIGHT / identidade aprovada pelo usuário.
+   Fonte canônica dos presets; não depende de arquivos de previews/. */
+:root {
+  --ink: #152438;
+  --muted: #50647d;
+  --navy: #152b40;
+  --accent: #315bf4;
+  --accent-soft: #edf2ff;
+  --paper: #fbfcff;
+  --line: #d8e2ef;
+  --warm: #9acc54;
+  --radius: 4px;
+}
+body { background: #e9eef5; }
+.app-label { color: #546a84; font-family: Consolas, 'Liberation Mono', monospace; font-size: 12px; }
+.toolbar { background: #fff; border-color: #d2deec; border-radius: 5px; box-shadow: none; }
+.toolbar button, .toolbar select { color: #233952; border-radius: 3px; }
+.toolbar select option { background: #fff; color: #233952; }
+.toolbar button:hover, .toolbar select:hover { background: #edf2ff; }
+.toolbar .primary { background: #315bf4; color: #fff; font-weight: bold; }
+.toolbar .primary:hover { background: #2449d1; }
+.counter, .status { color: #546a84; }
+.separator { background: #d8e2ef; }
+#deck { box-shadow: none; }
+.slide { padding-top: 46px; gap: 28px; }
+.slide h1 { font-size: 48px; letter-spacing: -1.5px; line-height: 1.08; }
+.slide h2 { letter-spacing: -.6px; }
+.slide .eyebrow, .slide .panel-label {
+  font-family: Consolas, 'Liberation Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 1.3px;
+}
+.slide-header { gap: 13px; }
+.slide-header .subtitle { font-size: 20px; }
+.panel { background: #fff; border-color: #d5deea; border-radius: 4px; padding: 28px; }
+.panel.tint { background: #edf2ff; border: 1px solid #c9d8fa; }
+/* .dark continua compatível, agora como painel de ênfase clara. */
+.panel.dark { background: #edf2ff; color: #152438; border-color: #c9d8fa; }
+.panel.dark .muted { color: #50647d; }
+.panel.dark .panel-label { color: #3152a5; }
+.big-number { font-family: Consolas, 'Liberation Mono', monospace; font-size: 58px; letter-spacing: -3px; }
+.badge { border-radius: 3px; font-family: Consolas, 'Liberation Mono', monospace; font-size: 13px; letter-spacing: .3px; }
+.badge.inverse { background: #dde7ff; color: #2648b3; }
+.badge.warm { background: #edf6df; color: #45651e; }
+.number, .check { border-radius: 3px; }
+.callout { background: #e8efff; border-left-width: 3px; border-radius: 0; }
+.callout.warm { background: #f2f8e8; border-color: #90b846; }
+.footer { border-top: 1px solid #d8e2ef; padding-top: 11px; bottom: 21px; font-family: Consolas, 'Liberation Mono', monospace; font-size: 11px; }
+.footer .footer-brand { letter-spacing: 1.5px; }
+.accent-line { left: 24px; top: 48px; width: 5px; height: 35px; }
+.slide.cover { background: #fbfcff; color: #152438; gap: 27px; padding-right: 420px; }
+.slide.cover h1 { font-size: 76px; line-height: 1.01; letter-spacing: -2.5px; }
+.slide.cover .eyebrow { color: #315bf4; }
+.slide.cover .intro { font-size: 23px; line-height: 1.5; }
+.slide.cover .muted { color: #50647d; }
+.slide.cover .badge { background: #edf2ff; color: #3152a5; padding: 9px 14px; }
+.slide.cover .footer { color: #5b718b; border-color: #d8e2ef; }
+/* Arte vetorial compartilhada, expandida no build, sem assets de execução. */
+.signal-board { position: absolute; right: 66px; top: 155px; width: 330px; height: 390px; border: 1px solid #ccd9e9; background: #f2f6fc; border-radius: 4px; }
+.board-heading { position: absolute; left: 23px; top: 20px; color: #435e7d; font-size: 12px; font-family: Consolas, 'Liberation Mono', monospace; letter-spacing: 1.5px; }
+.board-axis { position: absolute; background: #d9e4f0; }
+.board-link { position: absolute; background: #1da6ab; }
+.board-node { position: absolute; background: #b9ed72; border: 5px solid #e0edcc; border-radius: 2px; }
+.board-node.end-node { background: #48c9cb; border-color: #d2eff0; }
+.board-core { position: absolute; left: 103px; top: 150px; width: 124px; height: 104px; display: flex; flex-direction: column; gap: 13px; align-items: center; justify-content: center; background: #152b40; border: 1px solid #315bf4; border-radius: 4px; }
+.core-code { font-family: Consolas, 'Liberation Mono', monospace; color: #c1f581; font-size: 27px; font-weight: bold; }
+.core-label, .board-caption { font-family: Consolas, 'Liberation Mono', monospace; font-size: 10px; letter-spacing: 1px; }
+.core-label { color: #d3e4f6; }
+.board-caption { position: absolute; color: #546d89; }
+/* Compatibilidade com fontes de projetos que ainda usem .cover-art. */
+.cover-art .art-panel { border: 1px solid #ccd9e9; border-radius: 4px; }
+.cover-art .two { background: #e5eeff; }
+.cover-art .art-dot { border-color: #1da6ab; }
+.cover-art .three { background: #b9ed72; border-radius: 3px; }
+.slide.divider.dark { background: #f1f5ff; color: #152438; }
+.divider.dark .eyebrow { color: #315bf4; }
+.divider.dark .muted, .divider.dark .footer { color: #50647d; }
+.divider .chapter-number { color: #cfdbf6; font-family: Consolas, 'Liberation Mono', monospace; }
+.timeline .milestone { border-top-width: 3px; }
+.diagram .node { background: #fff; border-color: #bccfe4; border-radius: 4px; color: #243b55; font-size: 21px; }
+.diagram .node.focus { background: #e9f1ff; border-color: #315bf4; color: #2648b3; }
+.connector polygon { fill: #315bf4; }
+.slide[data-layout="diagrama"] .panel { background: #f2f6fc; border-color: #d2deec; }
+.triangle { background: #315bf4; }
+.table { border-radius: 4px; }
+.table-row.heading .table-cell { background: #e9efff; color: #2648b3; }
+.table-row:nth-child(odd):not(.heading) .table-cell { background: #f4f7fc; }
+.bar-track, .bar-fill { height: 28px; border-radius: 2px; }
+.bar-track { background: #eaf0f7; }
+.bar-fill { background: #315bf4; }
+.bar-fill.secondary { background: #51aaa9; }
+.bar-fill.warm { background: #9acc54; }
+.bar-label, .bar-value { font-family: Consolas, 'Liberation Mono', monospace; font-size: 18px; }
+.slide[data-layout="dados"] .panel.tint .panel-label { color: #3152a5; }
+.code-panel { background: #f0f4fb; border: 1px solid #d2deec; border-radius: 4px; color: #243b55; }
+.code-panel .keyword { color: #3152b4; }
+.code-panel .literal { color: #127373; }
+.code-panel .muted { color: #5b718b; }
+.option { border-radius: 4px; }
+.notes-drawer { border-radius: 5px; box-shadow: none; }

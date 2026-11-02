@@ -1,0 +1,57 @@
+/* SIGNAL LIGHT V2 / feedback: V1 escura demais. Somente prévia; sem promoção global.
+   A base Signal V1 é incorporada pelo build antes desta camada, sem @import/link. */
+:root {
+  --ink: #152438;
+  --muted: #50647d;
+  --paper: #fbfcff;
+  --accent: #315bf4;
+  --accent-soft: #edf2ff;
+  --line: #d8e2ef;
+}
+body { background: #e9eef5; }
+.app-label { color: #546a84; }
+.toolbar { background: #ffffff; border-color: #d2deec; }
+.toolbar button, .toolbar select { color: #233952; }
+.toolbar select option { background: #ffffff; color: #233952; }
+.toolbar button:hover, .toolbar select:hover { background: #edf2ff; }
+.toolbar .primary { background: #315bf4; color: #ffffff; }
+.toolbar .primary:hover { background: #2449d1; }
+.counter, .status { color: #546a84; }
+.separator { background: #d8e2ef; }
+.slide.cover { background: #fbfcff; color: #152438; }
+.slide.cover .eyebrow { color: #315bf4; }
+.slide.cover .muted { color: #50647d; }
+.slide.cover .badge { background: #edf2ff; color: #3152a5; }
+.slide.cover .accent-line { background: #315bf4; }
+.slide.cover .footer { color: #5b718b; border-color: #d8e2ef; }
+.signal-board { background: #f2f6fc; border-color: #ccd9e9; }
+.board-heading { color: #435e7d; }
+.board-axis { background: #d9e4f0; }
+.board-link { background: #1da6ab; }
+.board-node { background: #b9ed72; border-color: #e0edcc; }
+.board-node.end-node { background: #48c9cb; border-color: #d2eff0; }
+.board-core { background: #152b40; border-color: #315bf4; }
+.core-code { color: #c1f581; }
+.core-label { color: #d3e4f6; }
+.board-caption { color: #546d89; }
+.slide[data-layout="diagrama"] {
+  background: #fbfcff;
+  color: #152438;
+  --accent: #315bf4;
+  --accent-soft: #edf2ff;
+  --line: #d8e2ef;
+}
+.slide[data-layout="diagrama"] .eyebrow { color: #315bf4; }
+.slide[data-layout="diagrama"] .subtitle,
+.slide[data-layout="diagrama"] .muted { color: #50647d; }
+.slide[data-layout="diagrama"] .panel { background: #f2f6fc; border-color: #d2deec; }
+.slide[data-layout="diagrama"] .panel-label { color: #315bf4; }
+.slide[data-layout="diagrama"] .node { background: #ffffff; border-color: #bccfe4; color: #243b55; }
+.slide[data-layout="diagrama"] .node.focus { background: #e9f1ff; border-color: #315bf4; color: #2648b3; }
+.slide[data-layout="diagrama"] .connector polygon { fill: #315bf4; }
+.slide[data-layout="diagrama"] .accent-line { background: #315bf4; }
+.slide[data-layout="diagrama"] .footer { color: #5b718b; border-color: #d8e2ef; }
+.slide[data-layout="dados"] .panel.tint { background: #edf2ff; border-color: #c9d8fa; color: #152438; }
+.slide[data-layout="dados"] .panel.tint .panel-label { color: #3152a5; }
+.slide[data-layout="dados"] .panel.tint .big-number { color: #315bf4; }
+.slide[data-layout="dados"] .panel.tint .muted { color: #50647d; }

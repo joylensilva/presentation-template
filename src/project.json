@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "title": "Forma — Template de aulas",
+  "brand": "SUA INSTITUIÇÃO",
+  "course": "Nome da disciplina",
+  "author": "Nome do docente",
+  "output": "../template-aulas.html",
+  "slides": [
+    "slides/01-capa.html",
+    "slides/02-docente.html",
+    "slides/03-objetivos.html",
+    "slides/04-roteiro.html",
+    "slides/05-divisoria.html",
+    "slides/06-conceito.html",
+    "slides/07-comparacao.html",
+    "slides/08-categorias.html",
+    "slides/09-processo.html",
+    "slides/10-timeline.html",
+    "slides/11-diagrama.html",
+    "slides/12-triade.html",
+    "slides/13-tabela.html",
+    "slides/14-dados.html",
+    "slides/15-exemplo.html",
+    "slides/16-codigo.html",
+    "slides/17-atividade.html",
+    "slides/18-checagem.html",
+    "slides/19-sintese.html",
+    "slides/20-referencias.html",
+    "slides/21-encerramento.html"
+  ]
+}

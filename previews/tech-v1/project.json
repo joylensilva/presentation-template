@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "title": "Forma / Signal — Prévia visual",
+  "brand": "FORMA / SIGNAL",
+  "course": "PRÉVIA VISUAL · AGUARDANDO APROVAÇÃO",
+  "author": "Forma",
+  "output": "../tech-v1.html",
+  "slides": [
+    "cover.html",
+    "../../src/general/slides/03-objetivos.html",
+    "../../src/general/slides/11-diagrama.html",
+    "../../src/general/slides/14-dados.html",
+    "../../src/general/slides/19-sintese.html"
+  ],
+  "styles": ["theme-preview.css"]
+}

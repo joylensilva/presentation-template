@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "title": "Forma / Signal Light — Prévia visual",
+  "brand": "FORMA / SIGNAL LIGHT",
+  "course": "PRÉVIA CLARA · AGUARDANDO APROVAÇÃO",
+  "author": "Forma",
+  "output": "../tech-v2.html",
+  "slides": [
+    "../tech-v1/cover.html",
+    "../../src/general/slides/03-objetivos.html",
+    "../../src/general/slides/11-diagrama.html",
+    "../../src/general/slides/14-dados.html",
+    "../../src/general/slides/19-sintese.html"
+  ],
+  "styles": ["../tech-v1/theme-preview.css", "theme-preview.css"]
+}

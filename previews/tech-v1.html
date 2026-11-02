@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Apresentação 16:9 com exportação PowerPoint editável, inteiramente local.">
+<title>Forma / Signal — Prévia visual</title>
+<!--
+GUIA PARA AGENTES / AUTORES
+=========================
+ENTREGÁVEL: este HTML contém todos os estilos e códigos de PPTX, impressão,
+navegação e apresentação. Não precisa de arquivos ao lado nem acesso à rede.
+Não substitua códigos internos por links externos para economizar contexto.
+Com as fontes de desenvolvimento disponíveis, edite fragmentos de slides e
+recompile pelo build. Se recebeu apenas este HTML, preserve os códigos internos.
+Este arquivo reúne layouts reutilizáveis, não uma sequência obrigatória.
+Duplique, reordene e remova <section class="slide"> dentro de #deck.
+Edite o texto e as notas; mantenha a estrutura dos componentes escolhidos.
+Configure organização, tema e autoria em #deck (data-brand/data-course/data-author).
+O identificador data-course também serve a temas corporativos/técnicos por compatibilidade.
+Personalize as cores em :root. A prancheta mede 1280 × 720, proporção 16:9.
+
+Roteiro sugerido: contexto → problema → proposta → evidências → próximos passos.
+Para aulas, use objetivos → conceitos → exemplos → prática → síntese.
+Um slide = uma ideia. Prefira 3–5 itens; divida o slide em vez de reduzir a fonte.
+As notas <aside class="speaker-notes"> são privadas na projeção/impressão e
+são exportadas como notas do apresentador no PPTX. Comentários GUIA explicam
+o uso de cada layout e suas variações; não devem virar conteúdo de aula.
+
+CONTRATO DE EDITABILIDADE
+O exportador mede o DOM final, inclusive grids/flex, cores, bordas e rich text.
+Use HTML real para texto e geometria: .panel, .badge, .check, .connector etc.
+Todos os elementos visuais dos exemplos são exportados como formas/textos,
+inclusive gráficos de barras e células de tabela (objetos individuais editáveis).
+Não são screenshots, imagens, gráficos com planilha nem tabelas nativas do Office.
+Para polígonos use clip-path:polygon(...) com pares %/px simples, ou data-shape.
+Formas: rect, roundRect, ellipse, triangle, diamond, chevron, rightArrow, line.
+Linhas usam data-x1/y1/x2/y2 relativos ao elemento; data-arrow="end" adiciona seta.
+Não use pseudo-elementos para conteúdo, canvas, imagens, SVG, gradientes,
+filtros, transformações/rotações ou posicionamento por z-index no conteúdo.
+Use ordem DOM para sobreposição. O validador recusa recursos não suportados;
+nunca há fallback silencioso para imagens. Notas e controles não são exportados.
+Links http(s), mailto e âncoras de slides são preservados no PPTX.
+Cada linha visual vira uma caixa de texto com trechos formatados editáveis,
+preservando as quebras do navegador. Ao editar muito texto no PowerPoint,
+reorganize as linhas ou una as caixas. Use fontes instaladas também no destino.
+API pública: AulaTemplate.exportPptx({download:false}) retorna Uint8Array;
+AulaTemplate.validate() retorna diagnósticos; goTo(n) navega (base 1).
+-->
+<style>
+/* fonte: tools/styles/theme.css */
+:root{--ink:#172b3a;--navy:#172b3a;--muted:#526674;--accent:#007e80;--accent-soft:#e5f3f0;--paper:#fcfcf9;--line:#d4dfdf;--warm:#f1b65c;--red:#aa4146;--radius:18px;--font:Arial,Helvetica,sans-serif}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;font-family:var(--font);color:var(--ink)}
+body{background:#e7ebed;overflow:hidden}button,select{font:inherit}button,select{cursor:pointer}button:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #e7b452;outline-offset:3px}
+.app-label{position:fixed;left:28px;top:25px;font-size:13px;color:var(--muted);letter-spacing:2px;font-weight:bold}
+.toolbar{position:fixed;right:20px;top:14px;z-index:100;display:flex;align-items:center;gap:6px;padding:7px;background:#fff;border:1px solid #d4dfdf;border-radius:13px;box-shadow:0 4px 18px #172b3a12}
+.toolbar button,.toolbar select{border:0;background:transparent;color:var(--ink);padding:9px 11px;border-radius:7px;font-size:13px;min-height:36px}.toolbar button:hover,.toolbar select:hover{background:#e5f3f0}.toolbar .primary{background:var(--accent);color:white}.toolbar .primary:hover{background:#00696b}.toolbar button:disabled{opacity:.4;cursor:wait}.toolbar select{max-width:210px}.separator{width:1px;height:24px;background:#d4dfdf}.counter{font-size:12px;min-width:49px;text-align:center;color:var(--muted);font-variant-numeric:tabular-nums}
+#viewport{position:fixed;inset:82px 24px 36px;display:flex;align-items:center;justify-content:center}#deck{position:relative;width:1280px;height:720px;flex-shrink:0;transform-origin:center;box-shadow:0 12px 50px #172b3a20}
+.slide{display:none;position:absolute;inset:0;width:1280px;height:720px;padding:48px 64px 62px;background:var(--paper);overflow:hidden;flex-direction:column;gap:24px}.slide.active{display:flex}
+.slide h1,.slide h2,.slide h3,.slide p{margin:0}.slide h1{font-size:46px;line-height:1.12;letter-spacing:-1px;max-width:1110px}.slide h2{font-size:29px;line-height:1.2}.slide h3{font-size:23px;line-height:1.25}.slide p,.slide li{font-size:23px;line-height:1.4}.slide .small{font-size:18px;line-height:1.4}.slide .tiny{font-size:15px;line-height:1.4}.slide .muted{color:var(--muted)}.slide .eyebrow{font-size:14px;font-weight:bold;line-height:20px;letter-spacing:2px;color:var(--accent)}
+.slide-header{display:flex;flex-direction:column;gap:10px;flex-shrink:0}.slide-header .subtitle{font-size:21px;color:var(--muted);max-width:1050px}.content{flex:1;min-height:0}.stack{display:flex;flex-direction:column;gap:18px}.row{display:flex;align-items:center;gap:16px}.between{justify-content:space-between}.grow{flex:1;min-width:0}.grid{display:grid;gap:24px}.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.split{grid-template-columns:1.35fr 1fr}.panel{padding:28px;border:1px solid var(--line);border-radius:var(--radius);background:#fff}.panel.tint{background:var(--accent-soft);border-color:var(--accent-soft)}.panel.dark,.dark{background:var(--navy);color:white;border-color:var(--navy)}.dark .muted{color:#bccdd4}.dark .eyebrow{color:#7fdbca}.panel .panel-label{font-size:14px;line-height:20px;font-weight:bold;letter-spacing:1px;color:var(--accent);margin-bottom:12px}.panel.dark .panel-label{color:#7fdbca}
+.badge{display:inline-block;align-self:flex-start;padding:8px 14px;border-radius:9px;font-size:16px;line-height:22px;font-weight:bold;background:var(--accent-soft);color:var(--accent)}.badge.warm{background:#fff0d9;color:#805210}.badge.danger{background:#f9e8e8;color:var(--red)}.badge.inverse{background:#294652;color:#a1ecdc}.callout{border-left:5px solid var(--accent);background:var(--accent-soft);padding:19px 24px;border-radius:0 12px 12px 0}.callout p{font-size:22px}.callout.warm{background:#fff0d9;border-color:var(--warm)}
+.list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:22px}.list li{display:flex;gap:16px;align-items:flex-start}.bullet{display:block;flex:0 0 8px;width:8px;height:8px;margin-top:12px;background:var(--accent);border-radius:50%}.check{display:flex;flex:0 0 32px;width:32px;height:32px;border:2px solid var(--accent);border-radius:7px;align-items:center;justify-content:center;color:var(--accent);font-size:22px;line-height:28px;font-weight:bold}.number{display:flex;width:44px;height:44px;flex-shrink:0;align-items:center;justify-content:center;background:var(--accent-soft);border-radius:12px;color:var(--accent);font-size:20px;font-weight:bold}.big-number{font-size:62px;line-height:1.05;font-weight:bold;color:var(--accent);letter-spacing:-2px}.rule{height:1px;background:var(--line);flex-shrink:0}.footer{position:absolute;left:64px;right:64px;bottom:22px;display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:13px;line-height:18px}.footer .footer-brand{font-weight:bold;letter-spacing:1px}.footer .page{font-variant-numeric:tabular-nums}.accent-line{position:absolute;left:0;top:48px;width:6px;height:58px;background:var(--accent)}
+.cover{justify-content:center;padding-right:420px;gap:27px}.cover h1{font-size:72px;line-height:1.04;max-width:800px;letter-spacing:-2px}.cover .intro{font-size:25px;line-height:1.4;max-width:680px}.cover .cover-art{position:absolute;right:64px;top:150px;width:265px;height:370px}.cover-art .art-panel{position:absolute;background:var(--accent-soft);border-radius:24px}.cover-art .one{left:0;top:0;width:196px;height:196px}.cover-art .two{right:0;bottom:0;width:196px;height:196px;background:var(--navy)}.cover-art .art-line{position:absolute;left:44px;top:74px;width:110px;height:8px;background:var(--accent)}.cover-art .art-dot{position:absolute;right:60px;bottom:62px;width:50px;height:50px;border:8px solid #7fdbca;border-radius:50%}.cover-art .three{position:absolute;left:0;bottom:0;width:48px;height:48px;background:var(--warm);border-radius:12px}
+.divider{justify-content:center;gap:20px;padding-right:300px}.divider h1{font-size:68px;max-width:850px}.divider .chapter-number{position:absolute;right:80px;top:196px;font-size:210px;line-height:1;font-weight:bold;color:#294652}.divider .footer{color:#bccdd4}
+.step{position:relative;padding:26px 21px;display:flex;flex-direction:column;gap:18px}.chevron{height:14px;width:24px;background:var(--accent);clip-path:polygon(0 0,60% 0,100% 50%,60% 100%,0 100%,40% 50%);flex-shrink:0}.process{display:flex;align-items:stretch;gap:14px}.process .step{flex:1}.process>.chevron{align-self:center}.timeline{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px}.timeline .milestone{border-top:4px solid var(--accent);padding-top:24px;display:flex;flex-direction:column;gap:16px}
+.diagram{position:relative;height:390px}.diagram .node{position:absolute;display:flex;align-items:center;justify-content:center;text-align:center;padding:15px 20px;background:#fff;border:2px solid var(--line);border-radius:14px;font-weight:bold;font-size:22px;line-height:1.2}.diagram .node.focus{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}.connector{position:absolute;pointer-events:none;overflow:visible}.connector line{stroke:var(--accent);stroke-width:2.5}.triangle{background:var(--navy);clip-path:polygon(50% 0,100% 100%,0 100%)}.diamond{background:var(--accent-soft);clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%)}
+.table{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden}.table-row{display:grid;grid-template-columns:1.05fr 1.5fr 1.5fr;gap:1px}.table-cell{background:#fff;padding:18px 20px;font-size:21px;line-height:1.3}.table-row.heading .table-cell{background:var(--navy);color:#fff;font-weight:bold;font-size:18px}.table-row:nth-child(odd):not(.heading) .table-cell{background:#f0f5f4}
+.chart{display:flex;flex-direction:column;gap:20px}.bar-row{display:grid;grid-template-columns:150px 1fr 60px;gap:18px;align-items:center}.bar-label,.bar-value{font-size:20px}.bar-track{height:32px;background:#edf2f1;border-radius:7px;overflow:hidden}.bar-fill{height:32px;background:var(--accent);border-radius:7px}.bar-fill.secondary{background:#8fc6bc}.bar-fill.warm{background:var(--warm)}
+.code-panel{padding:26px 30px;background:var(--navy);color:#d8e7e8;border-radius:16px}.code-panel pre{margin:0;font-family:Consolas,'Liberation Mono',monospace;font-size:22px;line-height:1.65;white-space:pre-wrap}.code-panel .keyword{color:#7fdbca}.code-panel .literal{color:#f1c987}.quote{font-size:42px!important;line-height:1.25!important;letter-spacing:-.5px}.option{padding:18px 22px;display:flex;align-items:center;gap:18px;background:#fff;border:1px solid var(--line);border-radius:12px}.option p{font-size:22px}.references a{color:var(--accent);text-decoration:underline}.speaker-notes{display:none!important}
+.status{position:fixed;bottom:8px;left:24px;right:24px;text-align:center;font-size:12px;color:var(--muted);min-height:17px}.notes-drawer{position:fixed;right:20px;top:76px;z-index:90;width:380px;max-height:65vh;overflow:auto;background:#fff;padding:24px;border:1px solid var(--line);border-radius:14px;box-shadow:0 8px 30px #172b3a20;font-size:15px;line-height:1.5}.notes-drawer[hidden]{display:none}.notes-drawer h2{font-size:18px;margin:0 0 10px}.notes-drawer p{white-space:pre-wrap;margin:0}.notes-drawer .note-hint{font-size:12px;color:var(--muted);margin-top:16px}
+body.presenting{background:#0b141d}body.presenting #viewport{inset:0}body.presenting #deck{box-shadow:none}body.presenting .app-label,body.presenting .status{display:none}body.presenting .toolbar{opacity:0;pointer-events:none;transition:opacity .15s}body.presenting.controls-visible .toolbar,body.presenting .toolbar:focus-within{opacity:1;pointer-events:auto}body.presenting:not(.controls-visible){cursor:none}body.presenting .notes-drawer{display:none}
+.export-host{position:fixed;left:-20000px;top:0;width:1280px;height:720px;pointer-events:none}.export-host .slide{display:flex;position:relative;inset:auto;transform:none;visibility:visible}
+@media(max-width:900px){.app-label{display:none}.toolbar{right:10px;left:10px;justify-content:flex-end}.toolbar select{max-width:140px}.toolbar button{padding:8px}.toolbar .optional{display:none}#viewport{inset:82px 12px 32px}}
+
+/* fonte: tools/styles/print.css */
+@page{size:13.333333in 7.5in;margin:0}
+@media print{
+ html,body{width:1280px;height:auto!important;margin:0!important;padding:0!important;background:white;overflow:visible!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ .toolbar,.app-label,.status,.notes-drawer,.export-host{display:none!important}
+ #viewport{display:block;position:static;inset:auto;margin:0;padding:0;width:1280px}
+ #deck{position:static;transform:none!important;width:1280px;height:auto;box-shadow:none}
+ .slide,.slide.active{position:relative;inset:auto;display:flex!important;visibility:visible!important;width:1280px;height:720px;margin:0;break-inside:avoid;break-after:page;page-break-after:always}
+ .slide:last-child{break-after:auto;page-break-after:auto}
+}
+
+/* SIGNAL V1 / proposta isolada. Não é o tema global; aguarda aprovação. */
+:root {
+  --ink: #111f32;
+  --muted: #53657b;
+  --navy: #111e2e;
+  --accent: #315bf4;
+  --accent-soft: #e9efff;
+  --paper: #f3f6fb;
+  --line: #d5deea;
+  --warm: #bef264;
+  --radius: 4px;
+}
+body { background: #131c29; }
+.app-label { color: #a3b5cb; font-family: Consolas, 'Liberation Mono', monospace; font-size: 12px; }
+.toolbar { border-color: #314052; background: #192537; border-radius: 5px; box-shadow: none; }
+.toolbar button, .toolbar select { color: #dce7f6; border-radius: 3px; }
+.toolbar select option { background: #192537; color: #dce7f6; }
+.toolbar button:hover, .toolbar select:hover { background: #283a51; }
+.toolbar .primary { background: #b9f267; color: #10200d; font-weight: bold; }
+.toolbar .primary:hover { background: #d0ff8d; }
+.counter, .status { color: #9eb0c6; }
+.separator { background: #3b4d65; }
+#deck { box-shadow: none; }
+.slide { padding-top: 46px; gap: 28px; }
+.slide h1 { font-size: 48px; letter-spacing: -1.5px; line-height: 1.08; }
+.slide h2 { letter-spacing: -.6px; }
+.slide .eyebrow, .slide .panel-label {
+  font-family: Consolas, 'Liberation Mono', monospace;
+  font-size: 13px;
+  letter-spacing: 1.3px;
+}
+.slide-header { gap: 13px; }
+.slide-header .subtitle { font-size: 20px; }
+.panel { border-radius: 4px; border-color: #d5deea; background: #ffffff; padding: 28px; }
+.panel.tint { background: #e8efff; border-color: #315bf4; border-width: 1px; }
+.panel.dark { background: #111e2e; border-color: #304659; color: #f0f6fd; }
+.panel.dark .muted { color: #a6bacd; }
+.panel.dark .panel-label { color: #bef264; }
+.big-number { font-family: Consolas, 'Liberation Mono', monospace; font-size: 58px; letter-spacing: -3px; }
+.badge { border-radius: 3px; font-family: Consolas, 'Liberation Mono', monospace; font-size: 13px; letter-spacing: .3px; }
+.badge.inverse { background: #243950; color: #bcf37b; }
+.number { border-radius: 3px; }
+.callout { background: #e8efff; border-left-width: 3px; border-radius: 0; }
+.footer { border-top: 1px solid #d5deea; padding-top: 11px; bottom: 21px; font-family: Consolas, 'Liberation Mono', monospace; font-size: 11px; }
+.footer .footer-brand { letter-spacing: 1.5px; }
+.accent-line { left: 24px; top: 48px; width: 5px; height: 35px; }
+.slide.cover { background: #0b131f; color: #f0f5fc; gap: 27px; padding-right: 420px; }
+.slide.cover h1 { font-size: 76px; line-height: 1.01; letter-spacing: -2.5px; }
+.slide.cover .eyebrow { color: #b9f267; }
+.slide.cover .intro { font-size: 23px; line-height: 1.5; }
+.slide.cover .muted { color: #a6b7ce; }
+.slide.cover .badge { background: #172b32; color: #b9f267; padding: 9px 14px; }
+.slide.cover .accent-line { background: #b9f267; }
+.slide.cover .footer { color: #8da4bf; border-color: #25384f; }
+.signal-board { position: absolute; right: 66px; top: 155px; width: 330px; height: 390px; border: 1px solid #30445b; background: #101d2b; border-radius: 4px; }
+.board-heading { position: absolute; left: 23px; top: 20px; color: #b0c2d9; font-size: 12px; font-family: Consolas, 'Liberation Mono', monospace; letter-spacing: 1.5px; }
+.board-axis { position: absolute; background: #24364b; }
+.board-link { position: absolute; background: #66ddd9; }
+.board-node { position: absolute; background: #c1f581; border: 5px solid #273b39; border-radius: 2px; }
+.board-node.end-node { background: #6fe3dd; border-color: #234747; }
+.board-core { position: absolute; left: 103px; top: 150px; width: 124px; height: 104px; display: flex; flex-direction: column; gap: 13px; align-items: center; justify-content: center; background: #192e3b; border: 1px solid #b9f267; border-radius: 4px; }
+.core-code { font-family: Consolas, 'Liberation Mono', monospace; color: #c1f581; font-size: 27px; font-weight: bold; }
+.core-label, .board-caption { font-family: Consolas, 'Liberation Mono', monospace; font-size: 10px; letter-spacing: 1px; color: #a5b9d1; }
+.board-caption { position: absolute; }
+.slide[data-layout="diagrama"] { background: #0f1926; color: #f1f6fc; --accent: #79e2db; --accent-soft: #17323c; --line: #304558; }
+.slide[data-layout="diagrama"] .eyebrow { color: #b9f267; }
+.slide[data-layout="diagrama"] .subtitle, .slide[data-layout="diagrama"] .muted { color: #a6b9d0; }
+.slide[data-layout="diagrama"] .panel { background: #152332; border-color: #30475f; }
+.slide[data-layout="diagrama"] .panel-label { color: #b9f267; }
+.slide[data-layout="diagrama"] .node { background: #152332; border-color: #456078; border-radius: 4px; color: #e0eaf7; font-size: 21px; }
+.slide[data-layout="diagrama"] .node.focus { background: #193a43; border-color: #79e2db; color: #a0f0e6; }
+.slide[data-layout="diagrama"] .connector polygon { fill: #79e2db; }
+.slide[data-layout="diagrama"] .accent-line { background: #b9f267; }
+.slide[data-layout="diagrama"] .footer { color: #9db1c8; border-color: #304558; }
+.bar-track, .bar-fill { height: 28px; border-radius: 2px; }
+.bar-track { background: #eaf0f7; }
+.bar-fill { background: #315bf4; }
+.bar-fill.secondary { background: #51aaa9; }
+.bar-fill.warm { background: #9acc54; }
+.bar-label, .bar-value { font-family: Consolas, 'Liberation Mono', monospace; font-size: 18px; }
+.slide[data-layout="dados"] .panel.tint { background: #101e2f; border-color: #101e2f; color: #edf6ff; }
+.slide[data-layout="dados"] .panel.tint .panel-label { color: #86a8ff; }
+.slide[data-layout="dados"] .panel.tint .big-number { color: #c1f581; }
+.slide[data-layout="dados"] .panel.tint .muted { color: #afc2d9; }
+
+</style>
+<meta name="forma-build" content="da417d6c1e4643fb46a9e0c824df06498d320e6d710514d54d00829bb2c9e1c3">
+</head>
+<body>
+<div class="app-label">FORMA / APRESENTAÇÕES</div>
+<nav class="toolbar" aria-label="Controles da apresentação">
+  <button id="prev" title="Slide anterior (←)" aria-label="Slide anterior">←</button>
+  <span class="counter" id="counter" aria-live="polite"></span>
+  <button id="next" title="Próximo slide (→)" aria-label="Próximo slide">→</button>
+  <select id="slide-picker" aria-label="Ir para slide"></select>
+  <span class="separator"></span>
+  <button id="notes-button" class="optional" aria-expanded="false" aria-controls="notes-drawer">Notas</button>
+  <button id="print-button" title="Imprimir todos os slides em 16:9">Imprimir</button>
+  <button id="present-button" title="Tela cheia (F). Esc para sair.">Apresentar</button>
+  <button id="export-button" class="primary">Exportar PPTX</button>
+</nav>
+<div id="viewport">
+<main id="deck" data-brand="FORMA / SIGNAL" data-course="PRÉVIA VISUAL · AGUARDANDO APROVAÇÃO" data-author="Forma">
+<!-- GUIA / PRÉVIA: esta capa testa a direção Signal. Não promover ao tema
+compartilhado sem aprovação explícita do usuário. Desenho inteiramente vetorial. -->
+<section class="slide cover signal-cover" data-layout="capa" data-title="Signal / Proposta visual">
+  <p class="eyebrow">ESTRATÉGIA / PRODUTO / TECNOLOGIA</p>
+  <h1>Sistemas<br>conectados.<br>Decisões claras.</h1>
+  <p class="intro muted">Uma linguagem visual para transformar<br>complexidade em direção.</p>
+  <div class="row"><span class="badge">SIGNAL / DESIGN PREVIEW 01</span><p class="tiny muted">2026</p></div>
+  <div class="signal-board" aria-label="Diagrama vetorial de um sistema conectado">
+    <div class="board-heading">SYSTEM / OVERVIEW</div>
+    <div class="board-axis" style="left:34px;top:72px;width:1px;height:260px"></div>
+    <div class="board-axis" style="left:164px;top:72px;width:1px;height:260px"></div>
+    <div class="board-axis" style="left:294px;top:72px;width:1px;height:260px"></div>
+    <div class="board-axis" style="left:34px;top:104px;width:260px;height:1px"></div>
+    <div class="board-axis" style="left:34px;top:202px;width:260px;height:1px"></div>
+    <div class="board-axis" style="left:34px;top:300px;width:260px;height:1px"></div>
+    <div class="board-link" style="left:60px;top:104px;width:104px;height:2px"></div>
+    <div class="board-link" style="left:164px;top:104px;width:2px;height:99px"></div>
+    <div class="board-link" style="left:164px;top:202px;width:104px;height:2px"></div>
+    <div class="board-link" style="left:267px;top:202px;width:2px;height:98px"></div>
+    <div class="board-node" style="left:21px;top:90px;width:28px;height:28px"></div>
+    <div class="board-core"><span class="core-code">F / 01</span><span class="core-label">CONNECTED</span></div>
+    <div class="board-node end-node" style="left:280px;top:287px;width:28px;height:28px"></div>
+    <div class="board-caption" style="left:34px;top:345px">INPUT</div><div class="board-caption" style="right:32px;top:345px">OUTCOME</div>
+  </div>
+  <aside class="speaker-notes">Prévia visual Signal: grafite, azul elétrico, ciano e lima, tipografia editorial com microrrótulos monoespaçados e geometria técnica. Aguardar aprovação antes de alterar os estilos compartilhados.</aside>
+</section>
+
+<!-- GUIA / DIREÇÃO: 3 resultados concretos. Variações: agenda decisória,
+metas de negócio, resultados de um projeto, objetivos de uma palestra ou aula. -->
+<section class="slide" data-layout="objetivos" data-title="Direção e resultados">
+  <header class="slide-header"><p class="eyebrow">DIREÇÃO ESTRATÉGICA</p><h1>Uma visão comum. Três resultados.</h1><p class="subtitle">O que precisamos compreender, decidir e colocar em movimento.</p></header>
+  <div class="content grid cols-3">
+    <article class="panel stack"><span class="big-number">01</span><h2>Compreender</h2><p class="muted">Construir uma leitura compartilhada do cenário e das restrições.</p><div class="rule"></div><p class="small"><strong>Resultado:</strong> problema e contexto explícitos.</p></article>
+    <article class="panel stack"><span class="big-number">02</span><h2>Decidir</h2><p class="muted">Comparar alternativas com critérios claros e evidências relevantes.</p><div class="rule"></div><p class="small"><strong>Resultado:</strong> escolha e justificativa.</p></article>
+    <article class="panel tint stack"><span class="big-number">03</span><h2>Executar</h2><p class="muted">Traduzir a decisão em responsáveis, entregas e acompanhamento.</p><div class="rule"></div><p class="small"><strong>Resultado:</strong> próximo passo verificável.</p></article>
+  </div>
+  <aside class="speaker-notes">Nomeie a decisão ou alinhamento esperado. Para uma aula, substitua pelos resultados de aprendizagem; para um pitch, pelos pontos de decisão do público.</aside>
+</section>
+
+<!-- GUIA / ARQUITETURA: formas e conectores editáveis. Variações: modelo
+operacional, fluxo de informação, componentes, responsabilidades ou visão sistêmica. -->
+<section class="slide" data-layout="diagrama" data-title="Arquitetura e conexões">
+  <header class="slide-header"><p class="eyebrow">ARQUITETURA / VISÃO SISTÊMICA</p><h1>Interfaces claras. Evolução independente.</h1><p class="subtitle">A estrutura faz sentido quando cada conexão tem uma responsabilidade.</p></header>
+  <div class="content grid split"><div class="diagram">
+    <svg class="connector" data-shape="line" data-x1="0" data-y1="0" data-x2="174" data-y2="0" data-arrow="end" style="left:136px;top:185px;width:174px;height:3px" aria-hidden="true"><line x1="0" y1="1" x2="167" y2="1"/><polygon points="167,-4 174,1 167,6" fill="#007e80"/></svg>
+    <svg class="connector" data-shape="line" data-x1="0" data-y1="0" data-x2="160" data-y2="-110" data-arrow="end" style="left:410px;top:185px;width:160px;height:3px" aria-hidden="true"><line x1="0" y1="1" x2="155" y2="-105"/><polygon points="151,-110 160,-110 157,-101" fill="#007e80"/></svg>
+    <svg class="connector" data-shape="line" data-x1="0" data-y1="0" data-x2="160" data-y2="110" data-arrow="end" style="left:410px;top:185px;width:160px;height:3px" aria-hidden="true"><line x1="0" y1="1" x2="155" y2="105"/><polygon points="151,110 160,110 157,101" fill="#007e80"/></svg>
+    <div class="node" style="left:0;top:150px;width:145px;height:74px">Fontes</div><div class="node focus" style="left:260px;top:135px;width:200px;height:104px">Plataforma<br>de dados</div><div class="node" style="left:490px;top:30px;width:160px;height:90px">Produtos</div><div class="node" style="left:490px;top:260px;width:160px;height:90px">Operação</div>
+  </div><aside class="panel stack" style="justify-content:center"><p class="panel-label">COMO LER O MODELO</p><h2>O valor está nas conexões.</h2><p class="muted">Nomeie origem, transformação e consumo. Defina o que cada parte oferece e o que espera receber.</p><p class="small">Fluxo ilustrativo; adapte aos limites reais do sistema.</p></aside></div>
+  <aside class="speaker-notes">Percorra o modelo da esquerda para a direita. Identifique contratos, responsabilidades e pontos de falha. Conectores vêm antes dos nós no DOM.</aside>
+</section>
+
+<!-- GUIA / EVIDÊNCIAS: medidas com unidade, base, período e fonte.
+Variações: resultado comercial, KPI, estudo, diagnóstico, projeção ou status.
+Atualize números e largura das barras juntos. Não apresente os dados fictícios como fatos. -->
+<section class="slide" data-layout="dados" data-title="Indicadores e evidências">
+  <header class="slide-header"><p class="eyebrow">INDICADORES / LEITURA EXECUTIVA</p><h1>Os números precisam de uma interpretação.</h1><p class="subtitle">Exemplo fictício: evolução de três frentes de um projeto (%).</p></header>
+  <div class="content grid split"><div class="panel stack" style="justify-content:center;gap:32px"><div class="chart" role="img" aria-label="Dados fictícios: integração 85%, automação 65%, adoção 45%"><div class="bar-row"><span class="bar-label">Integração</span><div class="bar-track"><div class="bar-fill" style="width:85%"></div></div><strong class="bar-value">85%</strong></div><div class="bar-row"><span class="bar-label">Automação</span><div class="bar-track"><div class="bar-fill secondary" style="width:65%"></div></div><strong class="bar-value">65%</strong></div><div class="bar-row"><span class="bar-label">Adoção</span><div class="bar-track"><div class="bar-fill warm" style="width:45%"></div></div><strong class="bar-value">45%</strong></div></div><p class="tiny muted">Escala 0–100%. Dados fictícios para demonstrar a composição.</p></div><aside class="panel tint stack"><p class="panel-label">O SINAL MAIS RELEVANTE</p><span class="big-number">40 p.p.</span><h2>entre integrar e adotar.</h2><p class="muted">A entrega técnica, sozinha, não assegura uso. Qual hipótese merece o próximo teste?</p></aside></div>
+  <aside class="speaker-notes">Os números são fictícios. Ao substituir, informe fonte, período e denominador. Diferencie resultado observado de meta e projeção.</aside>
+</section>
+
+<!-- GUIA / SÍNTESE: 3 mensagens e uma decisão prática. Variações:
+recomendação executiva, conclusão de estudo, resumo técnico ou revisão de conteúdo. -->
+<section class="slide" data-layout="sintese" data-title="Síntese executiva">
+  <header class="slide-header"><p class="eyebrow">SÍNTESE / RECOMENDAÇÃO</p><h1>Menos ruído. Mais direção.</h1></header>
+  <div class="content grid cols-3"><article class="panel stack"><span class="big-number">01</span><h2>Contexto antes da solução.</h2><p class="muted">A proposta deve responder a um problema explícito e relevante.</p></article><article class="panel stack"><span class="big-number">02</span><h2>Critérios antes da escolha.</h2><p class="muted">Comparações precisam de evidências e compromissos claros.</p></article><article class="panel tint stack"><span class="big-number">03</span><h2>Teste antes de ampliar.</h2><p class="muted">A próxima entrega deve reduzir uma incerteza importante.</p></article></div>
+  <div class="callout"><p><strong>Próximo passo:</strong> definir responsável, entrega e data da próxima decisão.</p></div>
+  <aside class="speaker-notes">Retome a intenção da abertura. Registre decisões, dúvidas em aberto e responsáveis. Não introduza fatos novos na síntese.</aside>
+</section>
+</main>
+</div>
+<aside class="notes-drawer" id="notes-drawer" hidden aria-label="Notas do apresentador"><h2>Notas do apresentador</h2><p id="notes-content"></p><p class="note-hint">As notas não aparecem na impressão nem na projeção. No PPTX, ficam nas notas do apresentador.</p></aside>
+<div class="status" id="status" role="status">← → navegar · F apresentar · Home / End início e fim · Esc sair</div>
+<script>
+'use strict';
+/* fonte: tools/runtime/viewer.js */
+/* Interface e preparação do documento. Sem rede, dependências ou serviços. */
+const deck = document.getElementById('deck');
+const slides = [...deck.querySelectorAll(':scope > .slide')];
+const $ = id => document.getElementById(id);
+let current = 0, controlsTimer;
+slides.forEach((slide, i) => {
+  slide.id ||= `slide-${i+1}`;
+  const line = document.createElement('div'); line.className = 'accent-line'; line.setAttribute('aria-hidden','true'); slide.prepend(line);
+  const footer = document.createElement('footer'); footer.className = 'footer';
+  for (const [cls, text] of [['footer-brand',deck.dataset.brand],['footer-course',deck.dataset.course],['page',String(i+1).padStart(2,'0')]]) {
+    const span = document.createElement('span'); span.className=cls; span.textContent=text; footer.append(span);
+  }
+  slide.append(footer);
+  const option = document.createElement('option'); option.value=i; option.textContent=`${String(i+1).padStart(2,'0')} · ${slide.dataset.title || 'Slide'}`; $('slide-picker').append(option);
+});
+function status(text){$('status').textContent=text;}
+function fit(){const r=$('viewport').getBoundingClientRect();deck.style.transform=`scale(${Math.max(.05,Math.min(r.width/1280,r.height/720))})`;}
+function goTo(n, updateHash=true){
+  current=Math.max(0,Math.min(slides.length-1,n-1));
+  slides.forEach((s,i)=>{s.classList.toggle('active',i===current);s.setAttribute('aria-hidden',String(i!==current));});
+  $('counter').textContent=`${current+1} / ${slides.length}`;$('slide-picker').value=current;
+  $('prev').disabled=current===0;$('next').disabled=current===slides.length-1;
+  $('notes-content').textContent=slides[current].querySelector('.speaker-notes')?.textContent.trim() || 'Sem notas para este slide.';
+  if(updateHash)history.replaceState(null,'',`#${current+1}`);
+}
+function hashSlide(){const n=Number(location.hash.slice(1));goTo(Number.isFinite(n)&&n>0?n:1,false);}
+$('prev').onclick=()=>goTo(current);$('next').onclick=()=>goTo(current+2);$('slide-picker').onchange=e=>goTo(Number(e.target.value)+1);
+$('notes-button').onclick=()=>{const hidden=!$('notes-drawer').hidden;$('notes-drawer').hidden=hidden;$('notes-button').setAttribute('aria-expanded',String(!hidden));};
+document.addEventListener('keydown',e=>{
+  if(e.target.closest?.('select,input,textarea,[contenteditable]'))return;
+  if(e.key===' '&&e.target.closest?.('button'))return;
+  if(['ArrowRight','PageDown',' ','ArrowLeft','PageUp','Home','End'].includes(e.key))e.preventDefault();
+  if(['ArrowRight','PageDown',' '].includes(e.key))goTo(current+2);
+  if(['ArrowLeft','PageUp'].includes(e.key))goTo(current);
+  if(e.key==='Home')goTo(1);if(e.key==='End')goTo(slides.length);
+  if(e.key.toLowerCase()==='f')present();
+  if(e.key==='Escape'){
+    $('notes-drawer').hidden=true;
+    $('notes-button').setAttribute('aria-expanded','false');
+    if(document.body.classList.contains('presenting'))present();
+  }
+});
+let touchStart;
+$('viewport').addEventListener('touchstart',e=>{touchStart=e.touches[0].clientX;},{passive:true});
+$('viewport').addEventListener('touchend',e=>{if(touchStart===undefined)return;const dx=e.changedTouches[0].clientX-touchStart;if(Math.abs(dx)>60)goTo(current+(dx<0?2:0));touchStart=undefined;},{passive:true});
+addEventListener('resize',fit);addEventListener('hashchange',hashSlide);hashSlide();fit();
+
+/* fonte: tools/runtime/presentation.js */
+/* Tela cheia e controles de projeção. */
+function showControls(){document.body.classList.add('controls-visible');clearTimeout(controlsTimer);controlsTimer=setTimeout(()=>document.body.classList.remove('controls-visible'),2600);}
+async function present(){
+  if(document.body.classList.contains('presenting')){
+    if(document.fullscreenElement)await document.exitFullscreen();
+    document.body.classList.remove('presenting');$('present-button').textContent='Apresentar';fit();return;
+  }
+  document.body.classList.add('presenting');$('notes-drawer').hidden=true;$('notes-button').setAttribute('aria-expanded','false');$('present-button').textContent='Sair';
+  try{if(document.documentElement.requestFullscreen)await document.documentElement.requestFullscreen();}catch(e){status('Modo apresentação ativado na janela. Use Esc para sair.');}
+  showControls();fit();
+}
+$('present-button').onclick=present;
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement){document.body.classList.remove('presenting');$('present-button').textContent='Apresentar';}fit();});
+document.addEventListener('pointermove',e=>{if(document.body.classList.contains('presenting')&&e.clientY<100)showControls();});
+
+/* fonte: tools/runtime/print.js */
+/* Impressão usa o CSS 16:9 embutido pelo build. */
+function printSlides(){window.print();}
+$('print-button').onclick=printSlides;
+
+/* fonte: tools/runtime/zip.js */
+/* ZIP STORE nativo; sem dependências. */
+const FormaZip=(()=>{
+const ENC=new TextEncoder();
+const crcTable=Uint32Array.from({length:256},(_,n)=>{for(let i=0;i<8;i++)n=n&1?0xedb88320^(n>>>1):n>>>1;return n>>>0;});
+function crc32(data){let n=0xffffffff;for(const v of data)n=crcTable[(n^v)&255]^(n>>>8);return(n^0xffffffff)>>>0;}
+function zip(files){
+  const local=[],central=[];let offset=0;
+  const header=n=>{const b=new Uint8Array(n);return[b,new DataView(b.buffer)];};
+  for(const [name,source] of Object.entries(files)){
+    const filename=ENC.encode(name),data=typeof source==='string'?ENC.encode(source):source,crc=crc32(data);
+    const [l,lv]=header(30);lv.setUint32(0,0x04034b50,true);lv.setUint16(4,20,true);lv.setUint16(6,0x800,true);lv.setUint16(12,33,true);lv.setUint32(14,crc,true);lv.setUint32(18,data.length,true);lv.setUint32(22,data.length,true);lv.setUint16(26,filename.length,true);
+    local.push(l,filename,data);
+    const [c,cv]=header(46);cv.setUint32(0,0x02014b50,true);cv.setUint16(4,20,true);cv.setUint16(6,20,true);cv.setUint16(8,0x800,true);cv.setUint16(14,33,true);cv.setUint32(16,crc,true);cv.setUint32(20,data.length,true);cv.setUint32(24,data.length,true);cv.setUint16(28,filename.length,true);cv.setUint32(42,offset,true);central.push(c,filename);offset+=l.length+filename.length+data.length;
+  }
+  const size=central.reduce((n,b)=>n+b.length,0),[end,ev]=header(22),count=Object.keys(files).length;
+  ev.setUint32(0,0x06054b50,true);ev.setUint16(8,count,true);ev.setUint16(10,count,true);ev.setUint32(12,size,true);ev.setUint32(16,offset,true);
+  const out=new Uint8Array(offset+size+end.length);let at=0;for(const chunk of [...local,...central,end]){out.set(chunk,at);at+=chunk.length;}return out;
+}
+
+return {zip};
+})();
+
+/* fonte: tools/runtime/pptx-drawing.js */
+/* DrawingML: geometria, estilos, rich text e links. */
+const FormaDrawing=(()=>{
+const NS_A='http://schemas.openxmlformats.org/drawingml/2006/main';
+const NS_P='http://schemas.openxmlformats.org/presentationml/2006/main';
+const NS_R='http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+const REL='http://schemas.openxmlformats.org/package/2006/relationships';
+const UNIT=9525;
+const xml=s=>String(s??'').replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g,'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
+const doc=s=>'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+s;
+const emu=n=>Math.round(n*UNIT);
+const color=s=>{
+  const m=s.match(/rgba?\(([^)]+)\)/);
+  if(!m)throw new Error(`Cor não suportada: ${s}`);
+  const v=m[1].split(/[,\s/]+/).filter(Boolean).map(Number);
+  return {hex:v.slice(0,3).map(n=>Math.round(n).toString(16).padStart(2,'0')).join('').toUpperCase(),alpha:v.length>3?v[3]:1};
+};
+function solid(s,opacity=1){const c=color(s),a=Math.round(c.alpha*opacity*100000);return a<=0?'<a:noFill/>':`<a:solidFill><a:srgbClr val="${c.hex}">${a<100000?`<a:alpha val="${a}"/>`:''}</a:srgbClr></a:solidFill>`;}
+function stroke(c,w,opacity=1,arrow=false){return w>0?`<a:ln w="${emu(w)}" cap="flat">${solid(c,opacity)}<a:prstDash val="solid"/>${arrow?'<a:tailEnd type="triangle" w="sm" len="sm"/>':''}</a:ln>`:'<a:ln><a:noFill/></a:ln>';}
+const group='<p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>';
+const rels=items=>doc(`<Relationships xmlns="${REL}">${items.map(i=>`<Relationship Id="${i.id}" Type="${NS_R}/${i.type}" Target="${xml(i.target)}"${i.external?' TargetMode="External"':''}/>`).join('')}</Relationships>`);
+function transform(r){return `<a:xfrm><a:off x="${emu(r.x)}" y="${emu(r.y)}"/><a:ext cx="${Math.max(1,emu(r.w))}" cy="${Math.max(1,emu(r.h))}"/></a:xfrm>`;}
+const pt=(x,y)=>`<a:pt x="${Math.round(x)}" y="${Math.round(y)}"/>`;
+function customPath(w,h,commands){return `<a:custGeom><a:avLst/><a:gdLst/><a:ahLst/><a:cxnLst/><a:rect l="0" t="0" r="r" b="b"/><a:pathLst><a:path w="${Math.max(1,Math.round(w))}" h="${Math.max(1,Math.round(h))}">${commands}</a:path></a:pathLst></a:custGeom>`;}
+function geometry(el,s,r){
+  if(s.clipPath!=='none'){
+    const coordinates=s.clipPath.match(/^polygon\((.+)\)$/)?.[1];
+    if(!coordinates)throw new Error('Somente clip-path: polygon é suportado.');
+    const points=coordinates.split(',').map(p=>p.trim().split(/\s+/).map((v,i)=>v.endsWith('%')?parseFloat(v)/100*(i?r.h:r.w):parseFloat(v)));
+    return customPath(r.w*1000,r.h*1000,points.map((p,i)=>`<a:${i?'lnTo':'moveTo'}>${pt(p[0]*1000,p[1]*1000)}</a:${i?'lnTo':'moveTo'}>`).join('')+'<a:close/>');
+  }
+  const preset=el.dataset.shape;
+  if(preset&&preset!=='rect')return `<a:prstGeom prst="${preset}"><a:avLst/></a:prstGeom>`;
+  const corners=['borderTopLeftRadius','borderTopRightRadius','borderBottomRightRadius','borderBottomLeftRadius'].map(k=>{
+    const v=s[k];return Math.min(v.includes('%')?parseFloat(v)/100*Math.min(r.w,r.h):parseFloat(v)||0,Math.min(r.w,r.h)/2)*1000;
+  });
+  if(corners.every(n=>n===0))return '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom>';
+  if(r.w===r.h&&corners.every(n=>Math.abs(n-r.w*500)<1))return '<a:prstGeom prst="ellipse"><a:avLst/></a:prstGeom>';
+  const [tl,tr,br,bl]=corners,w=r.w*1000,h=r.h*1000,k=.5522847498;
+  const move=(x,y)=>`<a:moveTo>${pt(x,y)}</a:moveTo>`,line=(x,y)=>`<a:lnTo>${pt(x,y)}</a:lnTo>`;
+  const curve=(x1,y1,x2,y2,x,y)=>`<a:cubicBezTo>${pt(x1,y1)}${pt(x2,y2)}${pt(x,y)}</a:cubicBezTo>`;
+  return customPath(w,h,move(tl,0)+line(w-tr,0)+curve(w-tr+k*tr,0,w,tr-k*tr,w,tr)+line(w,h-br)+curve(w,h-br+k*br,w-br+k*br,h,w-br,h)+line(bl,h)+curve(bl-k*bl,h,0,h-bl+k*bl,0,h-bl)+line(0,tl)+curve(0,tl-k*tl,tl-k*tl,0,tl,0)+'<a:close/>');
+}
+function shape(ctx,name,r,geom,fill,line){const id=ctx.id++;ctx.parts.push(`<p:sp><p:nvSpPr><p:cNvPr id="${id}" name="${xml(name)}"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr><p:spPr>${transform(r)}${geom}${fill}${line}</p:spPr></p:sp>`);}
+function connector(ctx,name,x1,y1,x2,y2,c,w,opacity,arrow){
+  const id=ctx.id++,r={x:Math.min(x1,x2),y:Math.min(y1,y2),w:Math.abs(x2-x1),h:Math.abs(y2-y1)};
+  ctx.parts.push(`<p:cxnSp><p:nvCxnSpPr><p:cNvPr id="${id}" name="${xml(name)}"/><p:cNvCxnSpPr/><p:nvPr/></p:nvCxnSpPr><p:spPr><a:xfrm${x2<x1?' flipH="1"':''}${y2<y1?' flipV="1"':''}><a:off x="${emu(r.x)}" y="${emu(r.y)}"/><a:ext cx="${emu(r.w)}" cy="${emu(r.h)}"/></a:xfrm><a:prstGeom prst="line"><a:avLst/></a:prstGeom>${stroke(c,w,opacity,arrow)}</p:spPr></p:cxnSp>`);
+}
+function hyperlink(ctx,el){
+  const a=el.closest('a[href]');if(!a)return '';
+  const raw=a.getAttribute('href');
+  let target,type='hyperlink',external=true;
+  if(/^https?:\/\//i.test(raw)||/^mailto:/i.test(raw)){target=raw;}
+  else if(raw.startsWith('#')){
+    const n=Number(raw.slice(1))||slides.findIndex(s=>s.id===raw.slice(1))+1;
+    if(n<1||n>slides.length)return '';
+    target=`slide${n}.xml`;type='slide';external=false;
+  }else return '';
+  let rel=ctx.links.find(i=>i.target===target&&i.type===type);
+  if(!rel){rel={id:`rId${ctx.links.length+10}`,type,target,external};ctx.links.push(rel);}
+  return `<a:hlinkClick r:id="${rel.id}"${external?'':' action="ppaction://hlinksldjump"'}/>`;
+}
+function textStyle(s,opacity,link){
+  const size=Math.round(parseFloat(s.fontSize)*75),font=s.fontFamily.split(',')[0].replace(/["']/g,'');
+  const spacing=parseFloat(s.letterSpacing)||0;
+  return `<a:rPr lang="pt-BR" sz="${size}" b="${Number(parseInt(s.fontWeight)>=600)}" i="${Number(s.fontStyle==='italic')}" u="${s.textDecorationLine.includes('underline')?'sng':'none'}"${spacing?` spc="${Math.round(spacing*75)}"`:''}>${solid(s.color,opacity)}<a:latin typeface="${xml(font)}"/><a:ea typeface="${xml(font)}"/><a:cs typeface="${xml(font)}"/>${link}</a:rPr>`;
+}
+/* Caracteres são medidos com Range para preservar quebras, inline e alinhamento.
+   Uma caixa por linha, com vários a:r para negrito/itálico/links sem duplicação. */
+function text(ctx,root,origin,opacity,onlyNode=null){
+  const nodes=[];
+  if(onlyNode)nodes.push(onlyNode);
+  else{const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let n;while((n=walker.nextNode()))nodes.push(n);}
+  const range=document.createRange(),lines=[];
+  for(const node of nodes){
+    const el=node.parentElement,s=getComputedStyle(el);
+    if(s.display==='none'||s.visibility==='hidden'||el.closest('.speaker-notes'))continue;
+    const isPre=s.whiteSpace.startsWith('pre');
+    const link=hyperlink(ctx,el),pr=textStyle(s,opacity,link);
+    for(let i=0;i<node.length;i++){
+      let ch=node.data[i];
+      if(ch==='\n'||ch==='\r'){if(isPre)continue;ch=' ';}
+      range.setStart(node,i);range.setEnd(node,i+1);
+      const b=range.getBoundingClientRect();
+      if(b.width<.01||b.height<.01)continue;
+      if(s.textTransform==='uppercase')ch=ch.toUpperCase();
+      if(s.textTransform==='lowercase')ch=ch.toLowerCase();
+      let line=lines.find(l=>Math.abs(l.top-b.top)<2);
+      if(!line){line={top:b.top,left:b.left,right:b.right,h:b.height,font:parseFloat(s.fontSize),runs:[]};lines.push(line);}
+      line.left=Math.min(line.left,b.left);line.right=Math.max(line.right,b.right);line.h=Math.max(line.h,b.height);line.font=Math.max(line.font,parseFloat(s.fontSize));
+      const last=line.runs.at(-1);
+      if(last?.pr===pr)last.value+=ch;else line.runs.push({pr,value:ch});
+    }
+  }
+  for(const line of lines){
+    if(!line.runs.some(r=>r.value.trim()))continue;
+    const id=ctx.id++,r={x:line.left-origin.left,y:line.top-origin.top,w:line.right-line.left+3,h:Math.max(line.h,line.font*1.35)};
+    const runs=line.runs.map(v=>`<a:r>${v.pr}<a:t xml:space="preserve">${xml(v.value)}</a:t></a:r>`).join('');
+    ctx.parts.push(`<p:sp><p:nvSpPr><p:cNvPr id="${id}" name="${xml('Texto: '+line.runs.map(r=>r.value).join('').slice(0,60))}"/><p:cNvSpPr txBox="1"/><p:nvPr/></p:nvSpPr><p:spPr>${transform(r)}<a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/><a:ln><a:noFill/></a:ln></p:spPr><p:txBody><a:bodyPr wrap="none" lIns="0" tIns="0" rIns="0" bIns="0" anchor="t"><a:noAutofit/></a:bodyPr><a:lstStyle/><a:p><a:pPr marL="0" marR="0" indent="0" algn="l"><a:lnSpc><a:spcPct val="100000"/></a:lnSpc><a:spcBef><a:spcPts val="0"/></a:spcBef><a:spcAft><a:spcPts val="0"/></a:spcAft></a:pPr>${runs}<a:endParaRPr lang="pt-BR" sz="${Math.round(line.font*75)}"/></a:p></p:txBody></p:sp>`);
+  }
+}
+
+return {NS_A,NS_P,NS_R,xml,doc,color,solid,stroke,group,rels,geometry,shape,connector,text};
+})();
+
+/* fonte: tools/runtime/pptx-dom.js */
+/* Validação e medição do DOM em 1280 × 720. */
+const FormaDOM=(()=>{
+const {color,solid,stroke,geometry,shape,connector,text}=FormaDrawing;
+const presets=new Set(['rect','roundRect','ellipse','triangle','diamond','chevron','rightArrow','line']);
+function inspect(slide){
+  const issues=[],origin=slide.getBoundingClientRect();
+  for(const el of [slide,...slide.querySelectorAll('*')]){
+    if(el.closest('.speaker-notes'))continue;
+    const s=getComputedStyle(el),r=el.getBoundingClientRect();
+    if(s.display==='none'||s.visibility==='hidden')continue;
+    if(el.closest('svg')?.dataset.shape==='line')continue;
+    const name=el.className?.baseVal??el.className??el.tagName;
+    const fail=message=>issues.push({slide:slide.dataset.title,element:String(name),message});
+    if(['IMG','CANVAS','VIDEO','IFRAME','SVG','MATH','INPUT','TEXTAREA'].includes(el.tagName.toUpperCase()))fail('Use formas e texto HTML editáveis; este elemento não é suportado.');
+    if(el.dataset.shape&&!presets.has(el.dataset.shape))fail('data-shape desconhecido.');
+    if(s.backgroundImage!=='none')fail('Background com imagem ou gradiente não é suportado.');
+    if(s.transform!=='none'||s.rotate&&s.rotate!=='none')fail('Transformações no conteúdo não são suportadas.');
+    if(s.zIndex!=='auto')fail('Use ordem DOM em vez de z-index para sobreposição.');
+    if(s.filter!=='none'||s.boxShadow!=='none'||s.textShadow!=='none')fail('Filtros e sombras no conteúdo não são suportados.');
+    if(s.clipPath!=='none'&&!/^polygon\([\d.%px\s,+-]+\)$/.test(s.clipPath))fail('Use polygon com pares simples em % ou px.');
+    if(s.writingMode!=='horizontal-tb')fail('Texto vertical não é suportado.');
+    for(const pseudo of ['::before','::after']){const p=getComputedStyle(el,pseudo);if(!['none','normal'].includes(p.content))fail('Use um elemento HTML em vez de conteúdo em pseudo-elemento.');}
+    if(r.width&&r.height&&(r.left<origin.left-.5||r.top<origin.top-.5||r.right>origin.right+.5||r.bottom>origin.bottom+.5))fail('Elemento ultrapassa a prancheta 16:9.');
+    if(el.scrollWidth>el.clientWidth+2&&el.clientWidth>0)fail('Conteúdo ultrapassa a largura do seu elemento.');
+    if(el.scrollHeight>el.clientHeight+2&&s.overflowY==='hidden'&&el.clientHeight>0)fail('Conteúdo está cortado verticalmente.');
+    for(const edge of ['Top','Right','Bottom','Left'])if(parseFloat(s[`border${edge}Width`])>0&&!['solid','none','hidden'].includes(s[`border${edge}Style`]))fail('Use bordas sólidas.');
+  }
+  return issues;
+}
+function render(slide){
+  const ctx={id:2,parts:[],links:[]},origin=slide.getBoundingClientRect();
+  function walk(el,parentOpacity=1){
+    const s=getComputedStyle(el);if(s.display==='none'||s.visibility==='hidden'||el.closest('.speaker-notes'))return;
+    const opacity=parentOpacity*Number(s.opacity);if(opacity===0)return;
+    const b=el.getBoundingClientRect(),r={x:b.left-origin.left,y:b.top-origin.top,w:b.width,h:b.height};
+    if(el.dataset.shape==='line'){
+      const line=el.querySelector('line'),ls=line?getComputedStyle(line):s;
+      const val=k=>Number(el.dataset[k]||0);
+      connector(ctx,'Conector',r.x+val('x1'),r.y+val('y1'),r.x+val('x2'),r.y+val('y2'),line?ls.stroke:s.borderTopColor,line?parseFloat(ls.strokeWidth):parseFloat(s.borderTopWidth)||2,opacity,el.dataset.arrow==='end');return;
+    }
+    const edges=['Top','Right','Bottom','Left'].map(edge=>({w:parseFloat(s[`border${edge}Width`]),c:s[`border${edge}Color`],style:s[`border${edge}Style`]}));
+    const equal=edges.every(e=>e.w===edges[0].w&&e.c===edges[0].c);
+    if(r.w>0&&r.h>0&&(color(s.backgroundColor).alpha>0||edges.some(e=>e.w>0))){
+      shape(ctx,el.dataset.shape||String(el.className||el.tagName),r,geometry(el,s,r),solid(s.backgroundColor,opacity),equal?stroke(edges[0].c,edges[0].w,opacity):stroke(s.color,0));
+      if(!equal){const coords=[[r.x,r.y,r.x+r.w,r.y],[r.x+r.w,r.y,r.x+r.w,r.y+r.h],[r.x,r.y+r.h,r.x+r.w,r.y+r.h],[r.x,r.y,r.x,r.y+r.h]];edges.forEach((e,i)=>{if(e.w)connector(ctx,'Borda',...coords[i],e.c,e.w,opacity,false);});}
+    }
+    const children=[...el.children].filter(c=>getComputedStyle(c).display!=='none');
+    const inline=children.every(c=>['inline','inline-block'].includes(getComputedStyle(c).display)&&!c.querySelector('div,p,pre,section'));
+    if(inline){text(ctx,el,origin,opacity);return;}
+    for(const child of el.childNodes){if(child.nodeType===Node.ELEMENT_NODE)walk(child,opacity);else if(child.nodeType===Node.TEXT_NODE&&child.textContent.trim())text(ctx,el,origin,opacity,child);}
+  }
+  walk(slide);
+  return ctx;
+}
+async function measure(callback){
+  await document.fonts.ready;
+  const host=document.createElement('div');host.className='export-host';host.setAttribute('aria-hidden','true');document.body.append(host);
+  try{
+    const results=[];
+    for(let i=0;i<slides.length;i++){
+      const clone=slides[i].cloneNode(true);clone.removeAttribute('id');clone.classList.add('active');clone.removeAttribute('aria-hidden');host.replaceChildren(clone);
+      results.push(callback(clone,i));
+    }
+    return results;
+  }finally{host.remove();}
+}
+async function validate(){return(await measure(s=>inspect(s))).flat();}
+
+return {inspect,render,measure,validate};
+})();
+
+/* fonte: tools/runtime/pptx-package.js */
+/* Montagem OOXML: apresentação, mestres, slides, tema e notas. */
+const FormaPackage=(()=>{
+const {NS_A,NS_P,NS_R,xml,doc,group,rels}=FormaDrawing;
+const {inspect,render,measure}=FormaDOM;
+function theme(){
+  const colors={dk1:'172B3A',lt1:'FCFCF9',dk2:'294652',lt2:'E5F3F0',accent1:'007E80',accent2:'F1B65C',accent3:'8FC6BC',accent4:'AA4146',accent5:'526674',accent6:'D4DFDF',hlink:'007E80',folHlink:'805210'};
+  return doc(`<a:theme xmlns:a="${NS_A}" name="Forma"><a:themeElements><a:clrScheme name="Forma">${Object.entries(colors).map(([k,v])=>`<a:${k}><a:srgbClr val="${v}"/></a:${k}>`).join('')}</a:clrScheme><a:fontScheme name="Forma"><a:majorFont><a:latin typeface="Arial"/><a:ea typeface=""/><a:cs typeface=""/></a:majorFont><a:minorFont><a:latin typeface="Arial"/><a:ea typeface=""/><a:cs typeface=""/></a:minorFont></a:fontScheme><a:fmtScheme name="Forma"><a:fillStyleLst>${[0,1,2].map(()=>'<a:solidFill><a:schemeClr val="phClr"/></a:solidFill>').join('')}</a:fillStyleLst><a:lnStyleLst>${[6350,12700,19050].map(w=>`<a:ln w="${w}" cap="flat" cmpd="sng" algn="ctr"><a:solidFill><a:schemeClr val="phClr"/></a:solidFill><a:prstDash val="solid"/></a:ln>`).join('')}</a:lnStyleLst><a:effectStyleLst><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle><a:effectStyle><a:effectLst/></a:effectStyle></a:effectStyleLst><a:bgFillStyleLst>${[0,1,2].map(()=>'<a:solidFill><a:schemeClr val="phClr"/></a:solidFill>').join('')}</a:bgFillStyleLst></a:fmtScheme></a:themeElements></a:theme>`);
+}
+const colorMap='<p:clrMap accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" bg1="lt1" bg2="lt2" folHlink="folHlink" hlink="hlink" tx1="dk1" tx2="dk2"/>';
+function notesXml(content){
+  const paragraphs=content.split(/\n/).map(line=>`<a:p><a:r><a:rPr lang="pt-BR"/><a:t xml:space="preserve">${xml(line)}</a:t></a:r></a:p>`).join('');
+  return doc(`<p:notes xmlns:a="${NS_A}" xmlns:r="${NS_R}" xmlns:p="${NS_P}"><p:cSld><p:spTree>${group}<p:sp><p:nvSpPr><p:cNvPr id="2" name="Notas do apresentador"/><p:cNvSpPr txBox="1"/><p:nvPr><p:ph type="body" idx="1"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/>${paragraphs}</p:txBody></p:sp></p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:notes>`);
+}
+async function build(){
+  const rendered=await measure((s,i)=>{const issues=inspect(s);if(issues.length)throw new Error(`Slide ${i+1}: ${issues[0].message} (${issues[0].element})`);return {ctx:render(s),title:s.dataset.title,notes:s.querySelector('.speaker-notes')?.textContent.trim()||''};});
+  const files={},overrides=[];
+  function add(path,content,type){files[path]=content;if(type)overrides.push([path,type]);}
+  const mime='application/vnd.openxmlformats-officedocument.presentationml.';
+  add('_rels/.rels',rels([{id:'rId1',type:'officeDocument',target:'ppt/presentation.xml'},{id:'rId2',type:'extended-properties',target:'docProps/app.xml'}]));
+  // As propriedades core usam namespace de relacionamento próprio do pacote.
+  files['_rels/.rels']=files['_rels/.rels'].replace('</Relationships>','<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/></Relationships>');
+  add('docProps/core.xml',doc(`<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>${xml(document.title)}</dc:title><dc:creator>${xml(deck.dataset.author)}</dc:creator><cp:lastModifiedBy>Forma — exportador nativo</cp:lastModifiedBy><dcterms:created xsi:type="dcterms:W3CDTF">${new Date().toISOString()}</dcterms:created></cp:coreProperties>`),'application/vnd.openxmlformats-package.core-properties+xml');
+  add('docProps/app.xml',doc(`<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes"><Application>Forma — JavaScript nativo</Application><PresentationFormat>On-screen Show (16:9)</PresentationFormat><Slides>${rendered.length}</Slides><Notes>${rendered.length}</Notes></Properties>`),'application/vnd.openxmlformats-officedocument.extended-properties+xml');
+  add('ppt/presentation.xml',doc(`<p:presentation xmlns:a="${NS_A}" xmlns:r="${NS_R}" xmlns:p="${NS_P}"><p:sldMasterIdLst><p:sldMasterId id="2147483648" r:id="rId1"/></p:sldMasterIdLst><p:notesMasterIdLst><p:notesMasterId r:id="rId2"/></p:notesMasterIdLst><p:sldIdLst>${rendered.map((s,i)=>`<p:sldId id="${256+i}" r:id="rId${i+3}"/>`).join('')}</p:sldIdLst><p:sldSz cx="12192000" cy="6858000" type="screen16x9"/><p:notesSz cx="6858000" cy="9144000"/><p:defaultTextStyle><a:defPPr><a:defRPr lang="pt-BR"/></a:defPPr></p:defaultTextStyle></p:presentation>`),mime+'presentation.main+xml');
+  add('ppt/_rels/presentation.xml.rels',rels([{id:'rId1',type:'slideMaster',target:'slideMasters/slideMaster1.xml'},{id:'rId2',type:'notesMaster',target:'notesMasters/notesMaster1.xml'},...rendered.map((s,i)=>({id:`rId${i+3}`,type:'slide',target:`slides/slide${i+1}.xml`}))]));
+  add('ppt/theme/theme1.xml',theme(),'application/vnd.openxmlformats-officedocument.theme+xml');
+  add('ppt/slideMasters/slideMaster1.xml',doc(`<p:sldMaster xmlns:a="${NS_A}" xmlns:r="${NS_R}" xmlns:p="${NS_P}"><p:cSld name="Forma"><p:spTree>${group}</p:spTree></p:cSld>${colorMap}<p:sldLayoutIdLst><p:sldLayoutId id="2147483649" r:id="rId1"/></p:sldLayoutIdLst><p:txStyles><p:titleStyle/><p:bodyStyle/><p:otherStyle/></p:txStyles></p:sldMaster>`),mime+'slideMaster+xml');
+  add('ppt/slideMasters/_rels/slideMaster1.xml.rels',rels([{id:'rId1',type:'slideLayout',target:'../slideLayouts/slideLayout1.xml'},{id:'rId2',type:'theme',target:'../theme/theme1.xml'}]));
+  add('ppt/slideLayouts/slideLayout1.xml',doc(`<p:sldLayout xmlns:a="${NS_A}" xmlns:r="${NS_R}" xmlns:p="${NS_P}" type="blank" preserve="1"><p:cSld name="Em branco"><p:spTree>${group}</p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sldLayout>`),mime+'slideLayout+xml');
+  add('ppt/slideLayouts/_rels/slideLayout1.xml.rels',rels([{id:'rId1',type:'slideMaster',target:'../slideMasters/slideMaster1.xml'}]));
+  add('ppt/notesMasters/notesMaster1.xml',doc(`<p:notesMaster xmlns:a="${NS_A}" xmlns:r="${NS_R}" xmlns:p="${NS_P}"><p:cSld><p:spTree>${group}</p:spTree></p:cSld>${colorMap}<p:notesStyle><a:lvl1pPr><a:defRPr sz="1200"/></a:lvl1pPr></p:notesStyle></p:notesMaster>`),mime+'notesMaster+xml');
+  add('ppt/notesMasters/_rels/notesMaster1.xml.rels',rels([{id:'rId1',type:'theme',target:'../theme/theme1.xml'}]));
+  rendered.forEach(({ctx,title,notes},i)=>{
+    const n=i+1;
+    add(`ppt/slides/slide${n}.xml`,doc(`<p:sld xmlns:a="${NS_A}" xmlns:r="${NS_R}" xmlns:p="${NS_P}"><p:cSld name="${xml(title)}"><p:spTree>${group}${ctx.parts.join('')}</p:spTree></p:cSld><p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sld>`),mime+'slide+xml');
+    add(`ppt/slides/_rels/slide${n}.xml.rels`,rels([{id:'rId1',type:'slideLayout',target:'../slideLayouts/slideLayout1.xml'},{id:'rId2',type:'notesSlide',target:`../notesSlides/notesSlide${n}.xml`},...ctx.links]));
+    add(`ppt/notesSlides/notesSlide${n}.xml`,notesXml(notes),mime+'notesSlide+xml');
+    add(`ppt/notesSlides/_rels/notesSlide${n}.xml.rels`,rels([{id:'rId1',type:'notesMaster',target:'../notesMasters/notesMaster1.xml'},{id:'rId2',type:'slide',target:`../slides/slide${n}.xml`}]));
+  });
+  files['[Content_Types].xml']=doc(`<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/>${overrides.map(([p,t])=>`<Override PartName="/${p}" ContentType="${t}"/>`).join('')}</Types>`);
+  return FormaZip.zip(files);
+}
+
+return {build};
+})();
+
+/* fonte: tools/runtime/export-pptx.js */
+/* API de download e feedback da exportação. */
+const Pptx=(()=>{
+let exporting=false;
+  async function exportPptx({download=true}={}){
+    if(exporting)throw new Error('Uma exportação já está em andamento.');
+    exporting=true;$('export-button').disabled=true;status('Gerando formas e textos editáveis…');
+    try{
+      const bytes=await FormaPackage.build();
+      if(download){const url=URL.createObjectURL(new Blob([bytes],{type:'application/vnd.openxmlformats-officedocument.presentationml.presentation'})),a=document.createElement('a');a.href=url;a.download=(document.title.replace(/[^\p{L}\p{N} _-]/gu,'').trim()||'aula')+'.pptx';a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);}
+      status(`PPTX gerado: ${slides.length} slides, com formas e textos editáveis.`);return bytes;
+    }catch(error){status('Exportação interrompida: '+error.message);throw error;}
+    finally{exporting=false;$('export-button').disabled=false;}
+  }
+  return {exportPptx,validate:FormaDOM.validate};
+})();
+
+/* fonte: tools/runtime/bootstrap.js */
+window.AulaTemplate=Object.freeze({...Pptx,goTo,present,get current(){return current+1;},slideCount:slides.length});
+// Nome agnóstico; AulaTemplate é mantido como alias para apresentações existentes.
+window.FormaPresentation=window.AulaTemplate;
+$('export-button').onclick=()=>Pptx.exportPptx().catch(error=>console.error(error));
+
+</script>
+</body>
+</html>

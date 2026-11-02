@@ -1,0 +1,8 @@
+{
+  "styles": ["styles/theme.css", "styles/signal-light.css", "styles/print.css"],
+  "scripts": [
+    "runtime/viewer.js", "runtime/presentation.js", "runtime/print.js",
+    "runtime/zip.js", "runtime/pptx-drawing.js", "runtime/pptx-dom.js",
+    "runtime/pptx-package.js", "runtime/export-pptx.js", "runtime/bootstrap.js"
+  ]
+}

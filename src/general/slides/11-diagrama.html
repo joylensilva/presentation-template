@@ -1,0 +1,12 @@
+<!-- GUIA / ARQUITETURA: formas e conectores editáveis. Variações: modelo
+operacional, fluxo de informação, componentes, responsabilidades ou visão sistêmica. -->
+<section class="slide" data-layout="diagrama" data-title="Arquitetura e conexões">
+  <header class="slide-header"><p class="eyebrow">ARQUITETURA / VISÃO SISTÊMICA</p><h1>Interfaces claras. Evolução independente.</h1><p class="subtitle">A estrutura faz sentido quando cada conexão tem uma responsabilidade.</p></header>
+  <div class="content grid split"><div class="diagram">
+    <svg class="connector" data-shape="line" data-x1="0" data-y1="0" data-x2="174" data-y2="0" data-arrow="end" style="left:136px;top:185px;width:174px;height:3px" aria-hidden="true"><line x1="0" y1="1" x2="167" y2="1"/><polygon points="167,-4 174,1 167,6" fill="#007e80"/></svg>
+    <svg class="connector" data-shape="line" data-x1="0" data-y1="0" data-x2="160" data-y2="-110" data-arrow="end" style="left:410px;top:185px;width:160px;height:3px" aria-hidden="true"><line x1="0" y1="1" x2="155" y2="-105"/><polygon points="151,-110 160,-110 157,-101" fill="#007e80"/></svg>
+    <svg class="connector" data-shape="line" data-x1="0" data-y1="0" data-x2="160" data-y2="110" data-arrow="end" style="left:410px;top:185px;width:160px;height:3px" aria-hidden="true"><line x1="0" y1="1" x2="155" y2="105"/><polygon points="151,110 160,110 157,101" fill="#007e80"/></svg>
+    <div class="node" style="left:0;top:150px;width:145px;height:74px">Fontes</div><div class="node focus" style="left:260px;top:135px;width:200px;height:104px">Plataforma<br>de dados</div><div class="node" style="left:490px;top:30px;width:160px;height:90px">Produtos</div><div class="node" style="left:490px;top:260px;width:160px;height:90px">Operação</div>
+  </div><aside class="panel stack" style="justify-content:center"><p class="panel-label">COMO LER O MODELO</p><h2>O valor está nas conexões.</h2><p class="muted">Nomeie origem, transformação e consumo. Defina o que cada parte oferece e o que espera receber.</p><p class="small">Fluxo ilustrativo; adapte aos limites reais do sistema.</p></aside></div>
+  <aside class="speaker-notes">Percorra o modelo da esquerda para a direita. Identifique contratos, responsabilidades e pontos de falha. Conectores vêm antes dos nós no DOM.</aside>
+</section>

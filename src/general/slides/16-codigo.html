@@ -1,0 +1,14 @@
+<!-- GUIA / DEMONSTRAÇÃO: trecho curto de código ou pseudocódigo, com leitura ao lado.
+Variações: algoritmo, consulta, contrato de API, fórmula ou exemplo técnico. -->
+<section class="slide" data-layout="codigo" data-title="Código e demonstração">
+  <header class="slide-header"><p class="eyebrow">DEMONSTRAÇÃO / LÓGICA</p><h1>Explicite a regra antes de automatizar.</h1><p class="subtitle">Um exemplo pequeno facilita a discussão sobre critérios e limites.</p></header>
+  <div class="content grid split"><div class="code-panel stack"><p class="tiny muted">EXEMPLO.JS</p><pre><span class="keyword">function</span> priorizar(impacto, esforco) {
+  <span class="keyword">if</span> (esforco &lt;= <span class="literal">0</span>) {
+    <span class="keyword">throw new</span> Error(<span class="literal">"Esforço inválido"</span>);
+  }
+  <span class="keyword">return</span> impacto / esforco;
+}
+
+priorizar(<span class="literal">8</span>, <span class="literal">2</span>); <span class="muted">// resultado: 4</span></pre></div><aside class="stack" style="justify-content:center"><span class="badge">LEITURA DO EXEMPLO</span><h2>Validação antes do cálculo.</h2><p class="muted">A regra é simples e permite discutir os dados de entrada, o resultado e os casos inválidos.</p><div class="callout"><p>Que premissas precisam estar explícitas antes de usar este indicador?</p></div></aside></div>
+  <aside class="speaker-notes">O trecho não é executado no slide. É demonstrativo: em produção, trate tipos, valores ausentes e regras do domínio. Preserve texto e sintaxe editáveis, sem screenshot do código.</aside>
+</section>

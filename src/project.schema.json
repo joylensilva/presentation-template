@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Projeto Forma v1",
+  "type": "object",
+  "required": ["schema_version", "title", "brand", "course", "author", "output", "slides"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": 1},
+    "title": {"type": "string", "minLength": 1},
+    "brand": {"type": "string", "minLength": 1},
+    "course": {"type": "string", "minLength": 1},
+    "author": {"type": "string", "minLength": 1},
+    "output": {"type": "string", "pattern": "\\.html$"},
+    "slides": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "\\.html$"}},
+    "styles": {"type": "array", "items": {"type": "string", "pattern": "\\.css$"}}
+  }
+}

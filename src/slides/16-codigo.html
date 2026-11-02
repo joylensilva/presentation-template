@@ -1,0 +1,15 @@
+<!-- GUIA 16 / CÓDIGO OU FÓRMULA: trecho curto, explicação e resultado.
+Variações: pseudocódigo, consulta SQL, fórmula, algoritmo, demonstração.
+Use pre com spans para sintaxe; até 10 linhas; nunca screenshot de código. -->
+<section class="slide" data-layout="codigo" data-title="Código e raciocínio">
+  <header class="slide-header"><p class="eyebrow">EXEMPLO TÉCNICO</p><h1>Explicite o raciocínio</h1><p class="subtitle">Poucas linhas, uma ideia principal.</p></header>
+  <div class="content grid split"><div class="code-panel stack"><p class="tiny muted">EXEMPLO.JS</p><pre><span class="keyword">function</span> priorizar(impacto, esforco) {
+  <span class="keyword">if</span> (esforco &lt;= <span class="literal">0</span>) {
+    <span class="keyword">throw new</span> Error(<span class="literal">"Esforço inválido"</span>);
+  }
+  <span class="keyword">return</span> impacto / esforco;
+}
+
+priorizar(<span class="literal">8</span>, <span class="literal">2</span>); <span class="muted">// resultado: 4</span></pre></div><aside class="stack" style="justify-content:center"><span class="badge">O QUE OBSERVAR</span><h2>Validação antes do cálculo.</h2><p class="muted">O exemplo impede uma divisão inválida e deixa explícito o critério utilizado.</p><div class="callout"><p>O que precisaria mudar se o esforço pudesse ser desconhecido?</p></div></aside></div>
+  <aside class="speaker-notes">O exemplo é didático e não executa no slide. Verifique tipos e regras do domínio em um código real. Peça à turma para prever o resultado antes de explicá-lo.</aside>
+</section>

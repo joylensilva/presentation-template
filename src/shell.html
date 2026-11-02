@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Apresentação 16:9 com exportação PowerPoint editável, inteiramente local.">
+<title>{{TITLE}}</title>
+<!--
+GUIA PARA AGENTES / AUTORES
+=========================
+ENTREGÁVEL: este HTML contém todos os estilos e códigos de PPTX, impressão,
+navegação e apresentação. Não precisa de arquivos ao lado nem acesso à rede.
+Não substitua códigos internos por links externos para economizar contexto.
+Com as fontes de desenvolvimento disponíveis, edite fragmentos de slides e
+recompile pelo build. Se recebeu apenas este HTML, preserve os códigos internos.
+Este arquivo reúne layouts reutilizáveis, não uma sequência obrigatória.
+Duplique, reordene e remova <section class="slide"> dentro de #deck.
+Edite o texto e as notas; mantenha a estrutura dos componentes escolhidos.
+Configure organização, tema e autoria em #deck (data-brand/data-course/data-author).
+O identificador data-course também serve a temas corporativos/técnicos por compatibilidade.
+Personalize as cores em :root. A prancheta mede 1280 × 720, proporção 16:9.
+
+Roteiro sugerido: contexto → problema → proposta → evidências → próximos passos.
+Para aulas, use objetivos → conceitos → exemplos → prática → síntese.
+Um slide = uma ideia. Prefira 3–5 itens; divida o slide em vez de reduzir a fonte.
+As notas <aside class="speaker-notes"> são privadas na projeção/impressão e
+são exportadas como notas do apresentador no PPTX. Comentários GUIA explicam
+o uso de cada layout e suas variações; não devem virar conteúdo de aula.
+
+CONTRATO DE EDITABILIDADE
+O exportador mede o DOM final, inclusive grids/flex, cores, bordas e rich text.
+Use HTML real para texto e geometria: .panel, .badge, .check, .connector etc.
+Todos os elementos visuais dos exemplos são exportados como formas/textos,
+inclusive gráficos de barras e células de tabela (objetos individuais editáveis).
+Não são screenshots, imagens, gráficos com planilha nem tabelas nativas do Office.
+Para polígonos use clip-path:polygon(...) com pares %/px simples, ou data-shape.
+Formas: rect, roundRect, ellipse, triangle, diamond, chevron, rightArrow, line.
+Linhas usam data-x1/y1/x2/y2 relativos ao elemento; data-arrow="end" adiciona seta.
+Não use pseudo-elementos para conteúdo, canvas, imagens, SVG, gradientes,
+filtros, transformações/rotações ou posicionamento por z-index no conteúdo.
+Use ordem DOM para sobreposição. O validador recusa recursos não suportados;
+nunca há fallback silencioso para imagens. Notas e controles não são exportados.
+Links http(s), mailto e âncoras de slides são preservados no PPTX.
+Cada linha visual vira uma caixa de texto com trechos formatados editáveis,
+preservando as quebras do navegador. Ao editar muito texto no PowerPoint,
+reorganize as linhas ou una as caixas. Use fontes instaladas também no destino.
+API pública: AulaTemplate.exportPptx({download:false}) retorna Uint8Array;
+AulaTemplate.validate() retorna diagnósticos; goTo(n) navega (base 1).
+-->
+<!-- FORMA:STYLES -->
+</head>
+<body>
+<div class="app-label">FORMA / APRESENTAÇÕES</div>
+<nav class="toolbar" aria-label="Controles da apresentação">
+  <button id="prev" title="Slide anterior (←)" aria-label="Slide anterior">←</button>
+  <span class="counter" id="counter" aria-live="polite"></span>
+  <button id="next" title="Próximo slide (→)" aria-label="Próximo slide">→</button>
+  <select id="slide-picker" aria-label="Ir para slide"></select>
+  <span class="separator"></span>
+  <button id="notes-button" class="optional" aria-expanded="false" aria-controls="notes-drawer">Notas</button>
+  <button id="print-button" title="Imprimir todos os slides em 16:9">Imprimir</button>
+  <button id="present-button" title="Tela cheia (F). Esc para sair.">Apresentar</button>
+  <button id="export-button" class="primary">Exportar PPTX</button>
+</nav>
+<div id="viewport">
+<main id="deck" data-brand="{{BRAND}}" data-course="{{COURSE}}" data-author="{{AUTHOR}}">
+<!-- FORMA:SLIDES -->
+</main>
+</div>
+<aside class="notes-drawer" id="notes-drawer" hidden aria-label="Notas do apresentador"><h2>Notas do apresentador</h2><p id="notes-content"></p><p class="note-hint">As notas não aparecem na impressão nem na projeção. No PPTX, ficam nas notas do apresentador.</p></aside>
+<div class="status" id="status" role="status">← → navegar · F apresentar · Home / End início e fim · Esc sair</div>
+<!-- FORMA:RUNTIME -->
+</body>
+</html>

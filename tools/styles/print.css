@@ -1,0 +1,9 @@
+@page{size:13.333333in 7.5in;margin:0}
+@media print{
+ html,body{width:1280px;height:auto!important;margin:0!important;padding:0!important;background:white;overflow:visible!important;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+ .toolbar,.app-label,.status,.notes-drawer,.export-host{display:none!important}
+ #viewport{display:block;position:static;inset:auto;margin:0;padding:0;width:1280px}
+ #deck{position:static;transform:none!important;width:1280px;height:auto;box-shadow:none}
+ .slide,.slide.active{position:relative;inset:auto;display:flex!important;visibility:visible!important;width:1280px;height:720px;margin:0;break-inside:avoid;break-after:page;page-break-after:always}
+ .slide:last-child{break-after:auto;page-break-after:auto}
+}

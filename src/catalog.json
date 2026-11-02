@@ -1,0 +1,107 @@
+[
+  {
+    "layout": "capa",
+    "title": "Capa",
+    "file": "slides/01-capa.html"
+  },
+  {
+    "layout": "docente",
+    "title": "Quem conduz a aula",
+    "file": "slides/02-docente.html"
+  },
+  {
+    "layout": "objetivos",
+    "title": "Objetivos de aprendizagem",
+    "file": "slides/03-objetivos.html"
+  },
+  {
+    "layout": "roteiro",
+    "title": "Roteiro e combinados",
+    "file": "slides/04-roteiro.html"
+  },
+  {
+    "layout": "divisoria",
+    "title": "Divisória de seção",
+    "file": "slides/05-divisoria.html"
+  },
+  {
+    "layout": "conceito",
+    "title": "Conceito com contexto",
+    "file": "slides/06-conceito.html"
+  },
+  {
+    "layout": "comparacao",
+    "title": "Comparação lado a lado",
+    "file": "slides/07-comparacao.html"
+  },
+  {
+    "layout": "categorias",
+    "title": "Categorias e princípios",
+    "file": "slides/08-categorias.html"
+  },
+  {
+    "layout": "processo",
+    "title": "Processo e ciclo de vida",
+    "file": "slides/09-processo.html"
+  },
+  {
+    "layout": "timeline",
+    "title": "Linha do tempo",
+    "file": "slides/10-timeline.html"
+  },
+  {
+    "layout": "diagrama",
+    "title": "Diagrama de relações",
+    "file": "slides/11-diagrama.html"
+  },
+  {
+    "layout": "triade",
+    "title": "Três pilares",
+    "file": "slides/12-triade.html"
+  },
+  {
+    "layout": "tabela",
+    "title": "Matriz de critérios",
+    "file": "slides/13-tabela.html"
+  },
+  {
+    "layout": "dados",
+    "title": "Dados com interpretação",
+    "file": "slides/14-dados.html"
+  },
+  {
+    "layout": "exemplo",
+    "title": "Exemplo guiado",
+    "file": "slides/15-exemplo.html"
+  },
+  {
+    "layout": "codigo",
+    "title": "Código e raciocínio",
+    "file": "slides/16-codigo.html"
+  },
+  {
+    "layout": "atividade",
+    "title": "Atividade prática",
+    "file": "slides/17-atividade.html"
+  },
+  {
+    "layout": "checagem",
+    "title": "Checagem de compreensão",
+    "file": "slides/18-checagem.html"
+  },
+  {
+    "layout": "sintese",
+    "title": "Síntese e próximos passos",
+    "file": "slides/19-sintese.html"
+  },
+  {
+    "layout": "referencias",
+    "title": "Referências e leituras",
+    "file": "slides/20-referencias.html"
+  },
+  {
+    "layout": "encerramento",
+    "title": "Encerramento",
+    "file": "slides/21-encerramento.html"
+  }
+]

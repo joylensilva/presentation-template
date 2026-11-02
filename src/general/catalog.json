@@ -1,0 +1,23 @@
+[
+  {"layout":"capa","title":"Abertura e proposta","file":"slides/01-capa.html"},
+  {"layout":"apresentador","title":"Apresentador e equipe","file":"slides/02-apresentador.html"},
+  {"layout":"objetivos","title":"Direção e resultados","file":"slides/03-objetivos.html"},
+  {"layout":"roteiro","title":"Agenda e alinhamentos","file":"slides/04-roteiro.html"},
+  {"layout":"divisoria","title":"Divisória de seção","file":"slides/05-divisoria.html"},
+  {"layout":"conceito","title":"Contexto e oportunidade","file":"slides/06-conceito.html"},
+  {"layout":"comparacao","title":"Alternativas e decisão","file":"slides/07-comparacao.html"},
+  {"layout":"categorias","title":"Categorias e dimensões","file":"slides/08-categorias.html"},
+  {"layout":"processo","title":"Plano de execução","file":"slides/09-processo.html"},
+  {"layout":"timeline","title":"Linha do tempo e marcos","file":"slides/10-timeline.html"},
+  {"layout":"diagrama","title":"Arquitetura e conexões","file":"slides/11-diagrama.html"},
+  {"layout":"triade","title":"Três pilares","file":"slides/12-triade.html"},
+  {"layout":"tabela","title":"Matriz de critérios","file":"slides/13-tabela.html"},
+  {"layout":"dados","title":"Indicadores e evidências","file":"slides/14-dados.html"},
+  {"layout":"exemplo","title":"Caso e raciocínio guiado","file":"slides/15-exemplo.html"},
+  {"layout":"codigo","title":"Código e demonstração","file":"slides/16-codigo.html"},
+  {"layout":"atividade","title":"Dinâmica e plano de trabalho","file":"slides/17-atividade.html"},
+  {"layout":"checagem","title":"Pergunta e tomada de posição","file":"slides/18-checagem.html"},
+  {"layout":"sintese","title":"Síntese executiva","file":"slides/19-sintese.html"},
+  {"layout":"referencias","title":"Fontes e premissas","file":"slides/20-referencias.html"},
+  {"layout":"encerramento","title":"Próximos passos","file":"slides/21-encerramento.html"}
+]
